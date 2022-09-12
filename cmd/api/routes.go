@@ -38,6 +38,14 @@ func (app *application) routes() http.Handler {
 	// Register a new GET /debug/vars endpoint pointing to the expvar handler.
 	router.Handler(http.MethodGet, "/debug/vars", app.requirePermission("metrics:view", expvar.Handler().ServeHTTP))
 
+	// Add the POST /v1/tokens/password-reset endpoint.
+	router.HandlerFunc(http.MethodPost, "/v1/tokens/password-reset", app.createPasswordResetTokenHandler)
+	// Add the PUT /v1/users/password endpoint.
+	router.HandlerFunc(http.MethodPut, "/v1/users/password", app.updateUserPasswordHandler)
+
+	// Add the POST /v1/tokens/activation endpoint.
+	// router.HandlerFunc(http.MethodPost, "/v1/tokens/activation", app.createActivationTokenHandler)
+
 	// Wrap the router with the rateLimit() middleware.
 	// return app.recoverPanic(app.enableCORS(app.rateLimit(app.authenticate(router))))
 	return app.metrics(app.recoverPanic(app.rateLimit(app.authenticate(router))))

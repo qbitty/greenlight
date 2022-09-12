@@ -9,6 +9,7 @@ help:
 ## run/api: run the cmd/api application
 run/api:
 	@go run ./cmd/api -db-dsn=${GREENLIGHT_DB_DSN}
+	# @go run ./cmd/api -db-dsn=${GREENLIGHT_DB_DSN} -jwt-secret=${JWT_SECRET}
 
 ## db/psql: connect to the database using psql
 db/psql:
@@ -56,9 +57,9 @@ vendor:
 # BUILD
 # ==================================================================================== #
 ## build/api: build the cmd/api application
-current_time = $(shell date --iso-8601=seconds)
-git_description = $(shell git describe --always --dirty --tags --long)
-linker_flags = '-s -X main.buildTime=${current_time} -X main.version=${git_description}'
+current_time=$(shell date +%Y-%m-%d-%H:%M:%S)
+git_description=$(shell git describe --always --dirty --tags --long)
+linker_flags='-s -X main.buildTime=${current_time} -X main.version=${git_description}'
 
 PHONY: build/api
 build/api:
